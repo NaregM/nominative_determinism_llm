@@ -5,6 +5,7 @@ import pandas as pd
 from tqdm import tqdm
 from typing import List, Tuple, Dict, Callable
 
+import pickle
 from functools import lru_cache
 from concurrent.futures import ThreadPoolExecutor
 
@@ -68,12 +69,12 @@ def permutation_test(
     null_arr = np.array(null_rates)
     null_med = np.median(null_arr)
 
-    # 4. statistics
+    # stats for rejecting null
     p_value    = (null_arr >= p_obs).mean()
     delta      = p_obs - null_med
     risk_ratio = p_obs / null_med if null_med > 0 else np.inf
 
-    return {
+    results = {
         "p_obs": p_obs,
         "p_null_median": null_med,
         "p_value": p_value,
@@ -81,3 +82,9 @@ def permutation_test(
         "risk_ratio": risk_ratio,
         "null_distribution": null_arr
     }
+    
+    with open("nd_results.pkl", "wb") as f:
+        
+        pickle.dump(results, f)
+        
+    return results
