@@ -27,8 +27,8 @@ def compute_scores_parallel(pairs: List[Tuple[str,str]], score_func, max_workers
 def permutation_test(
     input_csv: str,
     score_func: Callable,
-    N: int = 20,
-    M: int = 3,
+    N: int = 80,
+    M: int = 5,
     seed: int = 42,
     max_workers: int = 8
 ) -> Dict[str, float]:
