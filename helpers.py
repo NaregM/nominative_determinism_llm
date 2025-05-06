@@ -6,6 +6,22 @@ from schemas import NDResult
 # --------------------------------------------------------------
 # --------------------------------------------------------------
 
+def binary_score(name: str, job_title: str) -> int:
+    """
+    Invoke your LLM chain via score_func(name, job_title), which returns "Yes"/"No".
+    Normalize to 1/0, treating anything other than exact "Yes" as 0.
+    """
+    chain_gpt = make_nd_chain_gpt()
+    def score_func(name, job_title):
+        try:
+            return chain_gpt.invoke({
+                    "name": name,
+                    "job_title": job_title}).nom_det_tag
+        except:
+            return None
+    tag = score_func(name, job_title)
+    return 1 if tag == "Yes" else 0
+
 def run_nd_analysis(input_csv: str, output_csv: str) -> None:
     """
     Load name/job CSV, run the ND chain, and write out a CSV annotated
